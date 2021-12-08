@@ -57,7 +57,6 @@ app.add_middleware(
 @app.post("/calculo/consumo/", tags=["consumo"])
 async def calculo_consumo(consumo: Consumo):
     if consumo.consumo == "GAS":
-        print(consumo.cantidad * 1.98)
         consumo.emision = consumo.cantidad * 1.98
     if consumo.consumo == "ENERGIA":
         consumo.emision = consumo.cantidad * 0.166
@@ -67,6 +66,8 @@ async def calculo_consumo(consumo: Consumo):
         consumo.emision = consumo.cantidad * 0.61
     if consumo.consumo == "GASOLINA":
         consumo.emision = consumo.cantidad * 1.98
+    if consumo.consumo == "AGUA":
+        consumo.emision = consumo.cantidad * 0.0835
     json_compatible_item_data = jsonable_encoder(consumo)
     await db_add_consumo(json_compatible_item_data)
     mensaje = str(consumo.emision) + " " + consumo.factor_emision
