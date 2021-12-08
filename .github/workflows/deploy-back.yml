@@ -23,8 +23,6 @@ jobs:
         run: gcloud auth configure-docker
 
       - name: Build docker image
-        env:
-          DOCKER_BUILDKIT: 1
         run: |-
           docker build -t ${{ env.IMAGE_NAME }}:${{ github.sha }} .
           docker push ${{ env.IMAGE_NAME }}:${{ github.sha }}
