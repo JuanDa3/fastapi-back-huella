@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Namespace
+metadata: 
+  name: micro-users-auth
+  namespace: micro-users-auth
+  labels:
+    app: micro-users-auth
+  annotations: 
+    kuma.io/sidecar-injection: enabled
+    kuma.io/mesh: kuma-mesh-test

@@ -1,0 +1,86 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: users-auth
+  namespace: micro-users-auth
+  labels:
+    app: users-auth
+    tags.datadoghq.com/env: "dev"
+    tags.datadoghq.com/service: "users-auth"
+    tags.datadoghq.com/version: "1.0.1"
+
+spec:
+  selector:
+    matchLabels:
+      app: users-auth
+  template:
+    metadata:
+      labels:
+        app: users-auth
+        tags.datadoghq.com/env: "dev"
+        tags.datadoghq.com/service: "users-auth"
+        tags.datadoghq.com/version: "1.0.1"
+    spec:
+      serviceAccountName: default
+      terminationGracePeriodSeconds: 5
+      containers:
+      - name: mi-container-user-auth
+        image: luisesillo/users-auth:1.0.1
+        ports:
+        - containerPort: 80
+        env:
+        - name: DD_AGENT_HOST
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
+        - name: DD_ENV
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.labels['tags.datadoghq.com/env']
+        - name: DD_SERVICE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.labels['tags.datadoghq.com/service']
+        - name: DD_VERSION
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.labels['tags.datadoghq.com/version']
+        - name: DD_LOGS_INJECTION
+          value: "true"
+        - name: DD_PROFILING_ENABLED
+          value: "true"
+        #- name: PORT
+          #value: "8080"
+        # - name: DISABLE_TRACING
+        #   value: "1"
+        #- name: DISABLE_PROFILER
+          #value: "1"
+        #readinessProbe:
+          #periodSeconds: 5
+          #exec:
+            #command: ["/bin/grpc_health_probe", "-addr=:8080"]
+        #livenessProbe:
+          #periodSeconds: 5
+          #exec:
+            #command: ["/bin/grpc_health_probe", "-addr=:8080"]
+        resources:
+          requests:
+            cpu: 200m
+            memory: 64Mi
+          limits:
+            cpu: 1024m
+            memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: users-auth
+spec:
+  type: ClusterIP
+  selector:
+    app: users-auth
+  ports:
+  - name: users-auth-ports
+    port: 5000
+    targetPort: 80
+

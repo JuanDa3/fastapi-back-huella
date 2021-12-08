@@ -1,0 +1,15 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: users-auth
+  namespace: micro-users-auth
+  annotations:
+    kubernetes.io/ingress.class: kong
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /users
+        backend:
+          serviceName: users-auth
+          servicePort: 80

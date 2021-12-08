@@ -1,0 +1,15 @@
+motor
+PyJWT
+bcrypt
+uvicorn
+pymongo
+python-decouple
+fastapi
+pydantic[email]
+passlib
+ddtrace
+aiodns
+aiohttp
+mailjet_rest
+kafka
+fastapi-redis-cache

@@ -1,0 +1,44 @@
+# enable Docker for your repository
+options:
+  docker: true
+
+pipelines:
+  branches:
+    master:
+      - step:
+          name: Build - Push - Deploy to GCP (us.gcr.io/jeraby-sup/partners-users-auth) for Production
+          image: google/cloud-sdk:latest
+          
+          caches:
+            - docker
+          deployment: production
+          script:
+            - export HOSTNAME="us.gcr.io"
+            - export PROJECT='jeraby-sup'
+            - export SERVICE_NAME="$(echo partners-users-auth| sed 's/_/-/g')"
+              
+            # set CLOUDSDK_CO NFIG environment variables
+            # - export CLOUDSDK_CONFIG=`pwd`/credentials/service-account.json
+            # Gcloud auth and check
+            - echo ${GCLOUD_KEY_FILE_AUTH} | base64 --decode --ignore-garbage > /tmp/gcloud-api.json
+            - gcloud auth activate-service-account --key-file /tmp/gcloud-api.json
+            - gcloud config set project ${PROJECT}
+            - gcloud config list
+
+            # set image name
+            - export IMAGE_NAME=$HOSTNAME/$PROJECT/$SERVICE_NAME:${BITBUCKET_COMMIT::7}
+
+            # Build image
+            - docker build -t $IMAGE_NAME .
+
+            # config image registry with gcloud helper
+            - gcloud auth configure-docker -q
+
+            # push image to gcr
+            - docker push $IMAGE_NAME
+
+            # deploy to cloud run
+            - gcloud beta run deploy $SERVICE_NAME --image $IMAGE_NAME --region us-central1 --project $PROJECT --cpu 1 --memory 512Mi --platform managed --no-use-http2 --allow-unauthenticated --port 80  --args "" --format json
+
+            # :-)
+            - echo "May the force be with you."
