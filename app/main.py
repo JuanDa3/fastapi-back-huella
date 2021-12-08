@@ -67,10 +67,16 @@ async def calculo_consumo(consumo: Consumo):
         consumo.emision = consumo.cantidad * 0.61
     if consumo.consumo == "GASOLINA":
         consumo.emision = consumo.cantidad * 1.98
-
     json_compatible_item_data = jsonable_encoder(consumo)
     await db_add_consumo(json_compatible_item_data)
-    return consumo.emision
+    mensaje = str(consumo.emision) + " " + consumo.factor_emision
+    return mensaje
+
+
+@app.get("/calculo/contsumo/get-consumos/")
+async def get_all_consumos():
+    response = await db_get_consumos()
+    return {"data": response}
 
 
 # @app.get("/partners/getbankinf/{email}/", tags=["bank"])

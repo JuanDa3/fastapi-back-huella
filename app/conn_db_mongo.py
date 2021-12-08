@@ -27,4 +27,5 @@ async def db_add_consumo(consumo: dict) -> dict:
 async def db_get_consumos() -> dict:
     consumos = []
     async for consumo in consumos_collection.find({}, {"_id": 0}):
-        consumos.append(consumo)
+        consumos.append(consumo_helper(consumo))
+    return consumos
