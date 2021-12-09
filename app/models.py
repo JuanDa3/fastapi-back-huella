@@ -4,26 +4,10 @@ from datetime import date, datetime
 from typing import List, Optional
 
 
-class ResiduoEnum(str, Enum):
-    peligrosos = "PELIGROSOS"
-    solidos = "SOLIDOS"
-    organicos = "ORGANICOS"
-    aprovechados = "APROVECHADOS"
-
-
-class ConsumoEnum(str, Enum):
-    gas = "GAS"
-    energia = "ENERGIA"
-    agua = "AGUA"
-    papel_carta = "PAPEL_CARTA"
-    papel_oficio = "PAPEL_OFICIO"
-    gasolina = "GASOLINA"
-
-
 class Consumo(BaseModel):
     cantidad: float
     fuente: str
-    consumo: ConsumoEnum
+    consumo: str
     unidad_medida: str
     factor_emision: str
     factor_emision_valor: float
@@ -51,7 +35,7 @@ class Consumo(BaseModel):
 class Residuo(BaseModel):
     cantidad: int
     fuente: str
-    residuo: ResiduoEnum
+    residuo: str
     unidad_medida: str
     factor_emision: float
     observaciones: str
