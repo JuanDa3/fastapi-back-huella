@@ -37,14 +37,7 @@ ACCESS_TOKEN_EXPIRE_HOURS = config("token_expire_hours")
 
 app = FastAPI()
 
-origins = [
-    "http://localhost.tiangolo.com",
-    "https://localhost.tiangolo.com",
-    "http://localhost",
-    "http://localhost:8080",
-    "http://localhost:3000",
-    "https://main.d3nc7if2jw05q3.amplifyapp.com/",
-]
+origins = ["*"]
 
 app.add_middleware(
     CORSMiddleware,
