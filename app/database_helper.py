@@ -7,5 +7,6 @@ def consumo_helper(consumo) -> dict:
         "factor_emision": consumo["factor_emision"],
         "factor_emision_valor": consumo["factor_emision_valor"],
         "observaciones": consumo["observaciones"],
+        "emision": consumo["emision"],
         "usuario": consumo["usuario"],
     }
